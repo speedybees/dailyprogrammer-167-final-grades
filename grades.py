@@ -73,11 +73,14 @@ class GradeBook(object):
     def get_student_grades_console(self):
         # Need to run 'pip install texttable' before using this
         from texttable import Texttable
-        table = Texttable()
+        table = Texttable(max_width=0)
         header = ['First Name', 'Last Name', 'Overall Average', 'Letter Grade']
+        alignment = ['l', 'l', 'c', 'c']
         for i in xrange(1, self.get_number_of_assignments() + 1):
             header.append('Score {0}'.format(i))
+            alignment.append('c')
         table.add_row(header)
+        table.set_cols_align(alignment)
         number_of_assignments = self.get_number_of_assignments()
         for student in self.sorted_students():
             grade_average = student.grade_average(number_of_assignments)
@@ -89,7 +92,6 @@ class GradeBook(object):
                 row.append(str(score))
             while len(row) < len(header):
                 row.append(None)
-            print row
             table.add_row(row)
         return table.draw()
 
@@ -150,8 +152,8 @@ class GradeBook(object):
 
     @staticmethod
     def parse_student(line):
-        match = re.match(r'^(\S+)\s+(\s*\D+)+\s*(.*)', line)
-        first_name, last_name = match.group(1), match.group(2).strip()
+        match = re.match(r'^([^,]+)\s*,(\s*\D+)+\s*(.*)', line)
+        first_name, last_name = match.group(1).strip(), match.group(2).strip()
         scores = [float(x) for x in re.split(r'\s+', match.group(3).strip())]
         return Student(Name(first_name, last_name), scores)
 
@@ -171,7 +173,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-i', '--input', action='store', default=None, dest='input', help='Input file to use.  If not provided, uses stdin.')
     parser.add_argument('-o', '--output', action='store', default=None, dest='output', help='Output file to use.  If not provided, uses stdin.')
-    parser.add_argument('-f', '--format', action='store', default='console', dest='format', choices=[name.lower() for name, member in Format.__members__.items()])
+    parser.add_argument('-f', '--format', action='store', default='console', dest='format', choices=[name.lower() for name, member in Format.__members__.items()], help='Format to output grades in.')
 
     args = parser.parse_args()
     args.format = Format[args.format]

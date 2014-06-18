@@ -165,7 +165,7 @@ class Student(object):
         if number_of_assignments is None:
             number_of_assignments = len(self.scores)
         # Specifically want to use floats to avoid integer rounding
-        return round(sum(self.scores)/float(number_of_assignments))
+        return int(round(sum(self.scores)/float(number_of_assignments)))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Calculate students' grades for a semester.")

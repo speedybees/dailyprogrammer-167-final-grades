@@ -3,8 +3,6 @@ from collections import OrderedDict
 from enum import Enum
 from math import ceil
 import argparse, re, sys
-import dominate
-from dominate import tags
 
 class Format(Enum):
     console = 1
@@ -96,6 +94,8 @@ class GradeBook(object):
         return table.draw()
 
     def get_student_grades_html(self):
+        import dominate
+        from dominate import tags
         page = dominate.document(title='Final Grades')
         with page:
             with tags.table(border="1"):

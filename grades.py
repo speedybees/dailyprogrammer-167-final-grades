@@ -1,7 +1,6 @@
 from bisect import bisect_left
 from collections import OrderedDict
 from enum import Enum
-from math import ceil
 import argparse, re, sys
 
 class Format(Enum):
@@ -166,7 +165,7 @@ class Student(object):
         if number_of_assignments is None:
             number_of_assignments = float(len(self.scores))
         # Specifically want to use floats to avoid integer rounding
-        return ceil(sum(self.scores)/number_of_assignments)
+        return round(sum(self.scores)/number_of_assignments)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Calculate students' grades for a semester.")

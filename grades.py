@@ -62,7 +62,7 @@ class GradeBook(object):
         self.students.add(student)
 
     def get_number_of_assignments(self):
-        return max([len(student.scores) for student in self.students])
+        return max([len(student.sorted_scores()) for student in self.students])
 
     def get_student_grades(self, output_type=Format.console):
         return self.output_type_callbacks[output_type]()
@@ -85,7 +85,7 @@ class GradeBook(object):
                    student.name.last,
                    grade_average,
                    self._grade_tiers.letter(grade_average)]
-            for score in student.scores:
+            for score in student.sorted_scores():
                 row.append(str(score))
             while len(row) < len(header):
                 row.append(None)
@@ -112,7 +112,7 @@ class GradeBook(object):
                         tags.td(student.name.last)
                         tags.td(grade_average)
                         tags.td(self._grade_tiers.letter(grade_average))
-                        for score in student.scores:
+                        for score in student.sorted_scores():
                             tags.td(score)
         return str(page)
 
@@ -131,7 +131,7 @@ class GradeBook(object):
                                     student.name.last,
                                     grade_average,
                                     self._grade_tiers.letter(grade_average),
-                                    ' | '.join([str(score) for score in student.scores]))
+                                    ' | '.join([str(score) for score in student.sorted_scores()]))
         return to_return
 
     def sorted_students(self):
@@ -166,6 +166,9 @@ class Student(object):
             number_of_assignments = len(self.scores)
         # Specifically want to use floats to avoid integer rounding
         return int(round(sum(self.scores)/float(number_of_assignments)))
+
+    def sorted_scores(self):
+        return sorted(self.scores)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Calculate students' grades for a semester.")

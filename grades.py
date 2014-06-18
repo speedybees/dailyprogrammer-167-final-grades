@@ -195,4 +195,5 @@ if __name__ == '__main__':
     with (open(args.input) if args.input is not None else sys.stdin) as infile:
         with (open(args.output, 'w') if args.output is not None else sys.stdout) as outfile:
             grade_book = GradeBook.parse(infile, tiers)
-            print grade_book.get_student_grades(args.format)
+            outfile.write(grade_book.get_student_grades(args.format))
+            outfile.write("\n")
